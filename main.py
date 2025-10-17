@@ -39,7 +39,7 @@ def parse_config(config_path):
         config = configparser.ConfigParser()
         config.read(config_path)
         return {
-            'output_dir': config.get('DEFAULT', 'output_dir', fallback='output'),
+            'output': config.get('DEFAULT', 'output', fallback='output'),
             'debug': config.getboolean('DEFAULT', 'debug', fallback=False),
             'crop_box': tuple(map(int,
                                   config.get('DEFAULT',
