@@ -134,5 +134,5 @@ class ImageProcessor:
         blue = img_array[:, :, 2]
         red_dominant = (red > green*1.2) & (red > blue*1.2)
         if np.sum(red_dominant) > 100:
-            return "Incorrect"
-        return "Correct"
+            return False
+        return True
