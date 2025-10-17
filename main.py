@@ -53,7 +53,9 @@ def parse_config(config_path):
 image_processor_arguments = parse_config(args.config)
 image_processor = ImageProcessor(**image_processor_arguments)
 
-with open('results.csv', mode='w', newline='', encoding='utf-8') as results_file:
+os.makedirs(image_processor.output, exist_ok=True)
+with open(f'{image_processor.output}/results.csv',
+          mode='w', newline='', encoding='utf-8') as results_file:
     csv_writer = writer(results_file)
     csv_writer.writerow(['File Name', 'Question', 'Answer'])
     for path in get_files_list(args.src):
