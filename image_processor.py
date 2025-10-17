@@ -125,3 +125,14 @@ class ImageProcessor:
                     file_name=data.file_name,
                     output=data.output)
         return data
+
+    def check_correct(self, data: Data) -> str:
+        """Check if the extracted answer is correct."""
+        img_array = np.array(data.image)
+        red = img_array[:, :, 0]
+        green = img_array[:, :, 1]
+        blue = img_array[:, :, 2]
+        red_dominant = (red > green*1.2) & (red > blue*1.2)
+        if np.sum(red_dominant) > 100:
+            return "Incorrect"
+        return "Correct"

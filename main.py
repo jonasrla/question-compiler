@@ -57,10 +57,11 @@ os.makedirs(image_processor.output, exist_ok=True)
 with open(f'{image_processor.output}/results.csv',
           mode='w', newline='', encoding='utf-8') as results_file:
     csv_writer = writer(results_file)
-    csv_writer.writerow(['File Name', 'Question', 'Answer'])
+    csv_writer.writerow(['File Name', 'Question', 'Answer', 'Is Correct'])
     for path in get_files_list(args.src):
         image = image_processor.data_constructor(path)
         crop_image = image_processor.crop_question(image)
         question = image_processor.extract_question(crop_image)
         answer = image_processor.extract_answer(crop_image)
-        csv_writer.writerow([image.file_name.split('.')[0], question, answer])
+        is_correct = image_processor.check_correct(crop_image)
+        csv_writer.writerow([image.file_name.split('.')[0], question, answer, is_correct])
