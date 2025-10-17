@@ -3,8 +3,7 @@ import argparse
 import configparser
 import os
 import logging
-
-from PIL import Image
+from csv import writer
 
 from image_processor import ImageProcessor
 
@@ -54,9 +53,12 @@ def parse_config(config_path):
 image_processor_arguments = parse_config(args.config)
 image_processor = ImageProcessor(**image_processor_arguments)
 
-for path in get_files_list(args.src):
-    image = Image.open(path).convert('RGB')
-    crop_image = image_processor.crop_question(image)
-    east_box = image_processor.detect_text_boxes(crop_image)
-    question = image_processor.extract_question(crop_image, east_box)
-    right_answer = image_processor.filter_green_text(crop_image)
+with open('results.csv', mode='w', newline='', encoding='utf-8') as results_file:
+    csv_writer = writer(results_file)
+    csv_writer.writerow(['File Name', 'Question', 'Answer'])
+    for path in get_files_list(args.src):
+        image = image_processor.data_constructor(path)
+        crop_image = image_processor.crop_question(image)
+        question = image_processor.extract_question(crop_image)
+        answer = image_processor.extract_answer(crop_image)
+        csv_writer.writerow([image.file_name.split('.')[0], question, answer])
