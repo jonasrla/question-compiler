@@ -5,9 +5,9 @@ import numpy as np
 import cv2
 
 class ImageProcessor:
-    def __init__(self, output_dir='output', crop_box=(420, 740, 2500, 1600),  debug_mode=False):
+    def __init__(self, output_dir='output', crop_box=(420, 740, 2500, 1600),  debug=False):
         self.output_dir = output_dir
-        self.debug_mode = debug_mode
+        self.debug = debug
         self.crop_box = crop_box
 
     def crop_question(self, image):

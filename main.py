@@ -21,7 +21,7 @@ parser.add_argument(
 parser.add_argument(
     '--config',
     help='Path to configuration file',
-    default=None)
+    default='config.ini')
 args = parser.parse_args()
 
 def get_files_list(directory):
@@ -40,9 +40,13 @@ def parse_config(config_path):
         config.read(config_path)
         return {
             'output_dir': config.get('DEFAULT', 'output_dir', fallback='output'),
-            'debug_mode': config.getboolean('DEFAULT', 'debug_mode', fallback=False)
+            'debug': config.getboolean('DEFAULT', 'debug', fallback=False),
+            'crop_box': tuple(map(int,
+                                  config.get('DEFAULT',
+                                             'crop_box',
+                                             fallback='420,740,2500,1600').split(',')))
         }
-    elif not os.path.isfile(config_path):
+    if not os.path.isfile(config_path):
         logger.warning('Config file %s not found. Using default parameters.',
                        config_path)
     return {}

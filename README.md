@@ -7,7 +7,7 @@ This project aims to compile questions from a number printscreen of questions us
 Edit a file named 'config.ini' with content
 
 ```ini
-[default]
+[DEFAULT]
 debug=false
 ```
 
