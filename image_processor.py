@@ -75,19 +75,52 @@ class ImageProcessor:
     @debug_decorator('filtered_question')
     def _filter_question(self, data: Data) -> Data:
         """Filter the image to enhance question text visibility."""
-        img_array = np.array(data.image)
-        red = img_array[:, :, 0]
-        green = img_array[:, :, 1]
-        blue = img_array[:, :, 2]
-        gray_shades = ((green < 255) & (green > 230)) & \
-                        ((red < 255) & (red > 230)) & \
-                        ((blue < 255) & (blue > 230))
-        gray_line = gray_shades.sum(axis=1) > (0.6 * gray_shades.shape[1])
-        blue_dominated = (blue > red) & (blue > green)
-        img_array[~gray_line, :] = [255, 255, 255]
-        img_array[blue_dominated] = [255, 255, 255]
-        filtered_image = Image.fromarray(img_array)
-        data = Data(image=filtered_image,
+        question_array = np.array(data.image)
+
+        white_rows = (question_array.min(axis=2) > 254).sum(axis=1)
+        question_box_limit = np.argmax((white_rows[1:] - white_rows[:-1])/(white_rows[:-1]+1) > 10)
+
+        text_left_limit = np.argmax(
+            (question_array[:question_box_limit, :, :].max(axis=2) < 40).sum(axis=0) > 0
+        )
+
+        image_limit = np.argmax(
+            (question_array[:question_box_limit, text_left_limit:, :].min(axis=2) > 254) \
+                .sum(axis=0) > 0
+        )
+
+        if image_limit > 0:
+            text_right_limit = np.argmax(
+                (
+                    np.flip(
+                        question_array[:question_box_limit, text_left_limit:image_limit, :],
+                        axis=1
+                    ) \
+                    .max(axis=2) < 40
+                ) \
+                    .sum(axis=0) > 0
+            )
+
+            text_right_limit = image_limit - text_right_limit
+        else:
+            text_right_limit = np.argmax(
+                (np.flip(
+                    question_array[:question_box_limit, text_left_limit:, :],
+                    axis=1
+                ) \
+                    .max(axis=2) < 40
+                ) \
+                    .sum(axis=0) > 0
+            )
+            text_right_limit = question_array.shape[1] - text_right_limit
+        question_box = data.image.crop((
+            text_left_limit-5,
+             0,
+             text_right_limit + 5,
+             question_box_limit
+        ))
+
+        data = Data(image=question_box,
                     file_name=data.file_name,
                     output=data.output)
         return data
