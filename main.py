@@ -4,6 +4,7 @@ import configparser
 import os
 import logging
 from csv import writer
+from glob import glob
 
 from image_processor import ImageProcessor
 
@@ -15,8 +16,7 @@ parser = argparse.ArgumentParser(
 sequence of test questions print screens""")
 parser.add_argument(
     'src',
-    help="""Folder path containing images. Supported file extensions: \
-.png, .jpg, .jpeg, .tiff, .bmp""")
+    help="""Folder path containing images. Supported file extensions: .png""")
 parser.add_argument(
     '--config',
     help='Path to configuration file',
@@ -25,11 +25,7 @@ args = parser.parse_args()
 
 def get_files_list(directory):
     """Get a sorted list of image files in the specified directory."""
-    files_list = os.listdir(directory)
-    files_list = sorted(files_list)
-    return [os.path.join(directory, f)
-            for f in files_list
-            if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))]
+    return sorted(glob(os.path.join(directory, '**', '*.png'), recursive=True))
 
 def parse_config(config_path):
     """Parse configuration file."""
