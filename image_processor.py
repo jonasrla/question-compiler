@@ -13,8 +13,16 @@ logger = logging.getLogger(__name__)
 def debug_decorator(step_name=''):
     """Decorator to enable debug mode for image processing methods."""
     def decorator(func):
-        def wrapper(self, *args, **kwargs):
-            result = func(self, *args, **kwargs)
+        def wrapper(self, data, *args, **kwargs):
+            try:
+                result = func(self, data, *args, **kwargs)
+            except Exception as e:
+                logger.error("Error occurred while processing %s in %s: %s",
+                             step_name,
+                             data.file_path,
+                             e)
+                data.image.show()
+                raise
             if self.debug:
                 debug_image = result.image.copy()
                 os.makedirs(
