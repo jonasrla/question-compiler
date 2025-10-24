@@ -17,24 +17,18 @@ def debug_decorator(step_name=''):
             result = func(self, *args, **kwargs)
             if self.debug:
                 debug_image = result.image.copy()
-                try:
-                    debug_image.save(
-                        os.path.join(self.output,
-                                     'debug',
-                                     step_name,
-                                     f"{result.file_name}"))
-                except FileNotFoundError as e:
-                    logger.warning("Debug directory not found. Creating: %s", e)
-                    os.makedirs(
-                        os.path.join(self.output,
-                                     'debug',
-                                     step_name),
-                        exist_ok=True)
-                    debug_image.save(
-                        os.path.join(self.output,
-                                     'debug',
-                                     step_name,
-                                     f"{result.file_name}"))
+                os.makedirs(
+                    os.path.join(self.output,
+                                 'debug',
+                                 step_name,
+                                 str(result.file_path.parent)),
+                    exist_ok=True)
+                debug_image.save(
+                    os.path.join(self.output,
+                                    'debug',
+                                    step_name,
+                                    str(result.file_path))
+                )
             return result
         return wrapper
     return decorator
