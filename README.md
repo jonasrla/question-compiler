@@ -1,6 +1,8 @@
 # About
 
-This project aims to compile questions from a number printscreen of questions using ocr.
+This project aims to compile questions from a number printscreen of questions using ocr. The images are save in `files/` folder and intermediate processing images are saved on `output/debug` if debug mode is set "True".
+
+To visualize the results use marimo notebooks.
 
 ## how to run
 
