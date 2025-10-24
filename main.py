@@ -64,4 +64,9 @@ with open(f'{image_processor.output}/results.csv',
         question = image_processor.extract_question(crop_image)
         answer = image_processor.extract_answer(crop_image)
         is_correct = image_processor.check_correct(crop_image)
-        csv_writer.writerow([image.file_name.split('.')[0], question, answer, is_correct])
+        csv_writer.writerow([
+            str(image.file_path),
+            question,
+            answer,
+            is_correct
+        ])
