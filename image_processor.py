@@ -78,8 +78,7 @@ class ImageProcessor:
         """Filter the image to enhance question text visibility."""
         question_array = np.array(data.image)
 
-        white_rows = (question_array.min(axis=2) > 254).sum(axis=1)
-        question_box_limit = np.argmax((white_rows[1:] - white_rows[:-1])/(white_rows[:-1]+1) > 10)
+        question_box_limit = np.argmax((question_array.min(axis=2) > 254).sum(axis=1) > 1500)
 
         text_left_limit = np.argmax(
             (question_array[:question_box_limit, :, :].max(axis=2) < 40).sum(axis=0) > 0
