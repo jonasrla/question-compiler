@@ -38,7 +38,7 @@ def debug_decorator(step_name=''):
         return wrapper
     return decorator
 
-Data = namedtuple('Data', ['image', 'file_name', 'output'])
+Data = namedtuple('Data', ['image', 'file_name', 'file_path'])
 
 class ImageProcessor:
     """Class for processing images."""
@@ -51,8 +51,8 @@ class ImageProcessor:
         """Construct Data namedtuple."""
         image = Image.open(path).convert("RGB")
         file_name = os.path.basename(path)
-        output = self.output
-        return Data(image=image, file_name=file_name, output=output)
+        file_path = pathlib.Path(path).relative_to(pathlib.Path(path).parts[0])
+        return Data(image=image, file_name=file_name, file_path=file_path)
 
     @debug_decorator('cropped')
     def crop_question(self, data: Data) -> Data:
@@ -60,7 +60,7 @@ class ImageProcessor:
         cropped_image = data.image.crop(self.crop_box)
         return Data(image=cropped_image,
                     file_name=data.file_name,
-                    output=data.output)
+                    file_path=data.file_path)
 
     def _get_text(self, data: Data) -> str:
         """Extract text from the image using OCR."""
@@ -122,7 +122,7 @@ class ImageProcessor:
 
         data = Data(image=question_box,
                     file_name=data.file_name,
-                    output=data.output)
+                    file_path=data.file_path)
         return data
 
     def extract_answer(self, data: Data) -> str:
@@ -156,7 +156,7 @@ class ImageProcessor:
         green_image = green_image.filter(ghost_filter)
         data = Data(image=green_image,
                     file_name=data.file_name,
-                    output=data.output)
+                    file_path=data.file_path)
         return data
 
     def check_correct(self, data: Data) -> bool:
