@@ -18,6 +18,8 @@ config.ini
 *.tiff
 
 *.csv
+*.tsv
+*.numbers
 *.txt
 
 .DS_Store
