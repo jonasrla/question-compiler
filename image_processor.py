@@ -1,5 +1,6 @@
 """Define class for image processing."""
 import os
+import pathlib
 from collections import namedtuple
 import logging
 
