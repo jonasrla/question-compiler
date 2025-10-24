@@ -159,7 +159,7 @@ class ImageProcessor:
                     output=data.output)
         return data
 
-    def check_correct(self, data: Data) -> str:
+    def check_correct(self, data: Data) -> bool:
         """Check if the extracted answer is correct."""
         img_array = np.array(data.image)
         red = img_array[:, :, 0]
