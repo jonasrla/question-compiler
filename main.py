@@ -39,7 +39,7 @@ def parse_config(config_path):
             'crop_box': tuple(map(int,
                                   config.get('DEFAULT',
                                              'crop_box',
-                                             fallback='420,740,2500,1600').split(',')))
+                                             fallback='420,740,2440,1600').split(',')))
         }
     if not os.path.isfile(config_path):
         logger.warning('Config file %s not found. Using default parameters.',

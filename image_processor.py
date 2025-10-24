@@ -45,7 +45,7 @@ Data = namedtuple('Data', ['image', 'file_name', 'file_path'])
 
 class ImageProcessor:
     """Class for processing images."""
-    def __init__(self, output='output', crop_box=(420, 740, 2500, 1600),  debug=False):
+    def __init__(self, output='output', crop_box=(420, 740, 2440, 1600),  debug=False):
         self.output = output
         self.debug = debug
         self.crop_box = crop_box
